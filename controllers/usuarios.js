@@ -45,13 +45,37 @@ const eliminarUsuario = async(req, res=response) => {
 
 const getUsuarios = async (req,res)=> {
 
-    const usuarios = await Usuario.find({});
+    const desde = Number(req.query.desde) || 0;
+    console.log(desde);
+    /* This process is sinchronous therefore may takes too much time */
+    // console.time('sync');
+    // const usuarios = await Usuario
+    //                     .find({},'nombre email role google')
+    //                     .skip ( desde )
+    //                     .limit( 5 );
+    // const total = await Usuario.count();
+    // console.timeEnd('sync');
+    /* **************  */
 
-    res.json({
+    /* This process is executed parallelly therefore  it'll take less time */
+    console.time('all');
+    const [ usuarios, total ] = await Promise.all ( [
+        Usuario
+            .find( {} , 'nombre email role google img' )
+            .skip( desde )
+            .limit( 5 ),
+
+        Usuario.count()
+
+    ] )
+    console.timeEnd('all');
+
+    res.json( {
         ok:true,
         usuarios,
-        uid:req.uid /* this value comes from middleware */
-    })
+        uid:req.uid /* this value comes from middleware */,
+        total
+    } )
 
 };
 
@@ -110,7 +134,7 @@ const actuaizarUsuario = async ( req, res = response ) => {
     
     // TODO Validar token y comprobar si es el usuario correcto
 
-    const uid = req.params.id
+    const uid = req.id
 
     console.log("my id for put", uid);
 
