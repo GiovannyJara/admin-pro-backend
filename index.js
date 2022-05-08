@@ -20,6 +20,9 @@ dbConnection();
 // n2nJrJ72Gwy8bap
 
 
+//Direcotorio publico
+app.use( express.static('public') );
+
 console.log(process.env);
 // Rutas
 app.use('/api/medicos', require('./routes/medico'));
