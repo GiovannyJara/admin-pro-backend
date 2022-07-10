@@ -33,12 +33,12 @@ router.post(
   crearMedico  //middleware personalizado , siempre se debe llamar al final de los checks
   );
 
-router.put(
-   '/:id',
-   [
-       
-   ],
-   actualizarMedico 
+router.put( '/:id',
+    [
+      validarJWT,
+      check('nombre', 'Debe indicar el  nombre del medico').not().isEmpty()
+    ],
+    actualizarMedico 
    );
 
 router.delete(

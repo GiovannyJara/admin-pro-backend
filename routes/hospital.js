@@ -32,13 +32,16 @@ const { validarJWT } = require('../middlewares/validar-jwt');
         crearHospital  //middleware personalizado , siempre se debe llamar al final de los checks
         );
       
-        router.put(
-          [],
+        router.put('/:id',
+          [
+            validarJWT,
+            check( 'nombre' , 'El nombre del hospital es nesesario').not().isEmpty(),
+          ],
           actualizarHospital 
           );
       
-        router.delete(
-          '/:id',
+        router.delete( '/:id',
+          validarJWT,
           borrarHospital
           );
       

@@ -97,9 +97,22 @@ const googleSignIn = async (req, res =response) =>{
     }
 }
 
+const renewToken = async ( req, res = response ) => {
+    // token genrated expire in 12 hours
+    const uid = req.uid;
+    /* Generate TOKEN !  JWT*/
+    const token = await generateJWT.generateJWT(uid);
+        
+    res.json( { 
+        ok: true,
+        uid,
+        token
+     } );
 
+}
 
 module.exports = {
     login,
-    googleSignIn
+    googleSignIn,
+    renewToken
 }
